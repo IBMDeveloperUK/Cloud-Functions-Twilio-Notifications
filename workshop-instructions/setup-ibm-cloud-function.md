@@ -162,6 +162,65 @@ To do this, we need to change it parameters we are invoking the Action with. Cha
 
 ![text message](../workshop-assets/ibm-cloud/text-message.png "Text Message")
 
+The action works! Now what? We need to trigger it.
+
+## Step 5 - Trigger the Action
+
+Before we get started with this step, make sure you have you a GitHub repository you can test on. If you don't, don't panic. Just checkout this [repository tutorial]() which shows you how to create your own. (This only takes ~2 minutes to do).
+
+A `Trigger` is something that will take an event from outside of IBM Cloud Functions and invoke all connected `Actions`.
+
+Head back to the `Functions` dashboard and select `Triggers` on the side panel and click on `Create`.
+
+![trigger dashboard](../workshop-assets/ibm-cloud/trigger-dashboard.png "Trigger Dashboard")
+
+You will be faced with the same 5 options, much like you were earlier. Select `Trigger`.
+
+![select trigger](../workshop-assets/ibm-cloud/select-trigger.png "Select Trigger")
+
+This will lead you to a page with a few more options around what type of trigger events we can listen for. For this workshop we are listening to GitHub Webhook events so select `GitHub`.
+
+![select trigger type](../workshop-assets/ibm-cloud/select-trigger-type.png "Select Trigger Type")
+
+Setting up the trigger steps:
+1. Click on `Get Access Token` - Clicking on this button will promp you to authenticate with GitHub if this is your first time authenticating or it will automatically get the an Auth Token. Either way, this just gived GitHub permission to interact with the `Trigger`.
+2. `Trigger Name` is how it will be referenced
+3. `Username` - This is your GitHub Username and _should_ populate automatically.
+4. `Repository` - This will be the repository with the Webhook attached to it and the repository that you wish to interact with the trigger. Select one from the dropdown list.
+5. `Events` - This is a comma seperated list and is GitHub specific. The `Trigger` will only listen for the Events you specify. A full list of Events can be found on the [GitHub Webhook docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#webhook-events). For this, enter `pull_request` as this is the event we want to listen for.
+6. Click `Create`
+
+![set up github trigger](../workshop-assets/ibm-cloud/setup-github-trigger.png "Set Up GitHub Trigger")
+
+Wait for the `Trigger` to create and load.
+
+After it has been created, you will need to connect the `Action` created in the previous steps.
+
+![empty trigger](../workshop-assets/ibm-cloud/empty-trigger.png "Empty Trigger")
+
+Since we have already made an `Action`, navigate to the `Select Existing` tab and find the `Action` from the dropdown list and click on `Add`.
+
+![attach action](../workshop-assets/ibm-cloud/attach-action.png "Attach Action")
+
+You can see the Webhook attached to the repository buy looking in the `Settings` of the repository on GitHub.
+
+![github webhook](../workshop-assets/ibm-cloud/github-webhook.png "GitHub Webhook")
+
+## Try it out
+
+1. Create a new branch on the test repository.
+2. Update the `README.md` file or make another minor file change in the repository.
+3. Create a new pull request from the new branch into `main`.
+4. Assign the pull reuqest to yourself
+5. Wait for the text message to come through.
+
+You can see the logs of this in the `Activations Dashboard`.
+
+![activations dashboard](../workshop-assets/ibm-cloud/activations-dashboard.png "Activations Dashboard")
+
+
+
+
 
 
 
