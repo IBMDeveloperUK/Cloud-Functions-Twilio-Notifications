@@ -132,7 +132,7 @@ func request(authToken, accountSid, urlStr string, msgDataReader strings.Reader)
 
 `action := params["action"].(string)`
 
-We haven't specified an `action` parameter for our function. The reason we haven't is because this will be within the payload of the `POST` request that hits this endpoint. 
+We haven't specified an `action` parameter for our function. The reason we haven't is because this will be within the payload of the `POST` request that hits this endpoint. It is still a parameter, just not one that we need to set.
 
 Let me explain.
 
@@ -141,4 +141,28 @@ When the GitHub Webhook sends a `POST` request to this endpoint, it will carry w
 Visit [GitHub Webhook events](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#webhook-payload-object-common-properties) for more information about each event payload.
 
 For this workshop, I am using the [pull_request](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#pull_request) event. You can see here, the `key` is `action` and it can have many values. In the code snippet above, we are making decisions based on the value of `action`.
+
+## Step 4 - Manually test the function
+
+First we will check the function fails correctly. The code to send a text message notification should only run if the value of `action` == `assigned`. All other cases should fail gracefully and just return a message to the console and return an object with the action that was supplied in the parameters.
+
+![test action](../workshop-assets/ibm-cloud/test-action.png "Test Action")
+
+You should see that the output is what we expected. A simple log to the console of the action and the return object containing the action. No other code was executed as the conditions were not met.
+
+![fail case pass](../workshop-assets/ibm-cloud/fail-case-pass.png "Fail Case Pass")
+
+We can see it is now passively failing successfully. Lets see if we can make it pass correctly and send a text message.
+
+To do this, we need to change it parameters we are invoking the Action with. Change `test` to `assigned` and then invoke it again.
+
+![test case success](../workshop-assets/ibm-cloud/test-case-success.png "Test Case Success")
+
+![success case pass](../workshop-assets/ibm-cloud/success-case-pass.png "Success Case Pass")
+
+![text message](../workshop-assets/ibm-cloud/text-message.png "Text Message")
+
+
+
+
 
