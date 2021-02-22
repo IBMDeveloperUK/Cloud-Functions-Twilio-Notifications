@@ -186,7 +186,7 @@ Setting up the trigger steps:
 1. Click on `Get Access Token` - Clicking on this button will promp you to authenticate with GitHub if this is your first time authenticating or it will automatically get the an Auth Token. Either way, this just gived GitHub permission to interact with the `Trigger`.
 2. `Trigger Name` is how it will be referenced
 3. `Username` - This is your GitHub Username and _should_ populate automatically.
-4. `Repository` - This will be the repository with the Webhook attached to it and the repository that you wish to interact with the trigger. Select one from the dropdown list.
+4. `Repository` - This will be the repository with the Webhook attached to it and the repository that you wish to interact with the trigger. Select one from the dropdown list (preferably the one you created to test this workshop on).
 5. `Events` - This is a comma seperated list and is GitHub specific. The `Trigger` will only listen for the Events you specify. A full list of Events can be found on the [GitHub Webhook docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#webhook-events). For this, enter `pull_request` as this is the event we want to listen for.
 6. Click `Create`
 
@@ -208,15 +208,34 @@ You can see the Webhook attached to the repository buy looking in the `Settings`
 
 ## Try it out
 
-1. Create a new branch on the test repository.
-2. Update the `README.md` file or make another minor file change in the repository.
-3. Create a new pull request from the new branch into `main`.
-4. Assign the pull reuqest to yourself
-5. Wait for the text message to come through.
+Head to the testing repository you created and edit the `README.md`
 
-You can see the logs of this in the `Activations Dashboard`.
+![edit readme](../workshop-assets/github/edit-readme.png "Edit README.md")
+
+Make a change to the code and then make sure you check the button `Create a new branch for this commit and start a pull request`
+
+![new commit](../workshop-assets/github/new-commit.png "New Commit")
+
+This will take you through to opening a new pull request. Give it a title (and a description if you wish) and then click `Create new pull request`.
+
+![open pull request](../workshop-assets/github/open-pull-request.png "Open Pull Request")
+
+The final piece to this puzzle is selecting a new assignee. For the purpose of this workshop, you can just assign yourself. This will be enough to create an event and trigger your serverless function.
+
+![select new assignee](../workshop-assets/github/select-new-assignee.png "Select New Assignee")
+
+If everything has been set up correctly, you should:
+
+1. Receive a text from Twilio (this may take a minute).
+
+and
+
+2. Be able to see the logs in the `Activations Dashboard`.
 
 ![activations dashboard](../workshop-assets/ibm-cloud/activations-dashboard.png "Activations Dashboard")
+
+
+
 
 
 
