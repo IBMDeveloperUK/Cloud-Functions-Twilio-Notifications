@@ -16,6 +16,5 @@ function main(params) {
       });
     } else {
         return { "message": "SMS not sent" };
- 
     }
 }
