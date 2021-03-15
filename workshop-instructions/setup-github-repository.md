@@ -28,3 +28,5 @@ Click on the `+` in the top right of your screen and select `New Repository`.
 You will end up with a very empty and bland repository, similar to the one shown below, but for the purpose of this workshop, this is all you will need!
 
 ![hello world repository](../workshop-assets/github/hello-world-repo.png "Hello World Repository")
+
+Next we'll set up [Twilio](./setup-twilio.md)

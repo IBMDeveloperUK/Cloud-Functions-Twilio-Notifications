@@ -21,3 +21,5 @@ Navigate back to your dashboard and it should look something similar to this:
 ![twilio dashboard](../workshop-assets/twilio/twilio-dashboard.png "Twilio Dashboard")
 
 That is all you needed to do for Twilio but don't close it down just yet. You will need to use the `Account SID` & `Auth Token` shortly!
+
+Let's get coding and create the serverless function! - [IBM Cloud Functions](./setup-ibm-cloud-function.md)
