@@ -18,7 +18,7 @@ Here you will have 5 single entities to choose from. Select `Action`.
 
 ![create action dashboard](../workshop-assets/ibm-cloud/create-dashboard.png "Create Action Dashboard")
 
-Give the `Action` a name and select the Runtime. There is no need to change the package so this can be left as `(Default Package)`. For the purpose of this workshop I have chosen `Go`. Feel free to mix it up and choose a language you are most familiar with. The principals of this workshop are very much the same across the board.
+Give the `Action` a name and select the Runtime. There is no need to change the package so this can be left as `(Default Package)`. For the purpose of this workshop I have chosen `Go` as there is no ready made Twilio package and you have to write the request code yourself. Feel free to mix it up and choose a language you are most familiar with. (Also included in this workshop is the Python and Node.JS equivalent - more on that later though). The principals of this workshop are very much the same across the board.
 
 ![create action](../workshop-assets/ibm-cloud/create-action.png "Create Action")
 
@@ -48,7 +48,7 @@ For this, you will need to add the following:
 
 ## Step 4 - Create the function code
 
-Read the code below line by line to understand what is happening. If you are not using `Go`, then do not panic as this can easily be translated and it's fairly simple to understand. 
+Read the code below line by line to understand what is happening. If you are not using `Go`, I would still recommend reading this code to understand what is going on behind the scenes in the other language packages. Feel free to switch this up and use [Python](../workshop-function-code/python-twilio.py) or [Node.JS](../workshop-function-code/node-twilio.js) instead (they are much shorter!).
 
 ```go
 package main
@@ -73,7 +73,7 @@ func Main(params map[string]interface{}) map[string]interface{} {
 
 		fmt.Println("pull request assigned")
 
-		// set account info
+		// set account information from provided params
 		accountSid := params["accountSid"].(string)
 		authToken := params["authToken"].(string)
 		urlStr := "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json"
@@ -118,11 +118,11 @@ func request(authToken, accountSid, urlStr string, msgDataReader strings.Reader)
 		err := decoder.Decode(&data)
 		if err == nil {
 			fmt.Println(data["sid"])
-			msg["status"] = "sent"
+			msg["status"] = "SMS sent"
 		}
 	} else {
 		fmt.Println(resp.Status)
-		msg["status"] = "not sent"
+		msg["status"] = "SMS not sent"
 	}
 	return msg
 }
