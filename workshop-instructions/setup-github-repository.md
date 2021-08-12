@@ -2,13 +2,13 @@
 
 GitHub is the perfect place for storing code. It works seamlessly with its counterpart version control tool `git`. In a nut shell, it allows multiple people or teams to work on the same project at the same time without tripping over each other. It provides developers with the tools to store code remotely without the need to save and package up from a local machine every time you make a change.
 
-For this workshop, everything will be done in the browser but it is a good idea to have both a [GitHub account]() and [git]() installed on your local machine.
+For this workshop, everything will be completed within the browser but you will need a [GitHub account](https://github.com/signup), [Twilio trial account](https://www.twilio.com/try-twilio) and an [IBM Cloud account](https://cloud.ibm.com/registration).
 
 ## Step 1 - Login or Sign up to GitHub
 
-If you do not already have an account, you will need to sign up. Don't worry, it is free.
+If you do not already have a [GitHub account](https://github.com/signup), you will need to sign up. Don't worry, it is free.
 
-If you do have an account, log in.
+If you do have an account, [log in](https://github.com/login).
 
 Once you are logged in, navigate to your profile page
 
