@@ -19,9 +19,9 @@ Click on the `+` in the top right of your screen and select `New Repository`.
 ![github profile](../workshop-assets/github/github-profile.png "GitHub Profile")
 
 1. Give it a unique name
-2. Git it a description example - "A repository to test a IBM Cloud Functions and Webhooks"
+2. Give it a description, such as - "A repository to test a IBM Cloud Functions and Webhooks"
 3. Ensure it is a public repository - this will eliminate any repository access complications
-4. Add a `README.md` as this will be the file you make your change to.
+4. Add a `README.md` as this will be the file you make your change to later in this workshop to demonstrate a trigger
 
 ![create new repository](../workshop-assets/github/create-new-repository.png "Create New Repository")
 
@@ -29,4 +29,4 @@ You will end up with a very empty and bland repository, similar to the one shown
 
 ![hello world repository](../workshop-assets/github/hello-world-repo.png "Hello World Repository")
 
-Next we'll set up [Twilio](./setup-twilio.md)
+Next, set up [Twilio](./setup-twilio.md)
