@@ -14,12 +14,10 @@ In this workshop we use:
 
 ---
 
-- [Presentation]
 - [Create a GitHub repository]
 - [Set up Twilio]
 - [Create IBM Cloud Function]
 
-[Presentation]: ./presentation/serverless.pdf
 [Create a GitHub repository]: ./workshop-instructions/setup-github-repository.md
 [Set up Twilio]: ./workshop-instructions/setup-twilio.md
 [Create IBM Cloud Function]: ./workshop-instructions/setup-ibm-cloud-function.md
