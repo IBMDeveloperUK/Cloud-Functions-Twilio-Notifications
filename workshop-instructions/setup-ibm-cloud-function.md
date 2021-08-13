@@ -2,33 +2,41 @@
 
 ## Step 1 - Sign Up or Login to IBM Cloud
 
-[Login or Sing Up]() to IBM Cloud
+[Login or sign up](https://cloud.ibm.com/registration) to IBM Cloud
 
 ## Step 2 - Create a Cloud Functions Action
 
-Once logged in, in the top search bar enter `cloud functions` and select the option with the `f` symbol.
+Once logged in, in the top search bar enter `cloud functions` and select the option with the `ƒ` symbol.
 
 ![ibm cloud functions search](../workshop-assets/ibm-cloud/functions-search.png "Functions Search")
 
-This will take you to the Functions dashboard. Select `Actions` from the side bar.
+This will take you to the Functions dashboard. Select `Actions` from the side bar and then select `Create`.
 
 ![functions dashboard](../workshop-assets/ibm-cloud/functions-dashboard.png "Functions Dashboard")
 
-Here you will have 5 single entities to choose from. Select `Action`.
+Here you will have 5 boxes to choose from - select `Action`.
 
 ![create action dashboard](../workshop-assets/ibm-cloud/create-dashboard.png "Create Action Dashboard")
 
-Give the `Action` a name and select the Runtime. There is no need to change the package so this can be left as `(Default Package)`. For the purpose of this workshop I have chosen `Go` as there is no ready made Twilio package and you have to write the request code yourself. Feel free to mix it up and choose a language you are most familiar with. (Also included in this workshop is the Python and Node.JS equivalent - more on that later though). The principals of this workshop are very much the same across the board.
+Give the `Action`:
+
+- A name
+- Select the Runtime (Go 1.15)
+- Leave the package as `Default Package`
+
+For the purpose of this workshop `Go` is the runtime as there is no ready made Twilio package in IBM Cloud Functions and the request code needs to be manually written. 
+
+Feel free to mix it up and choose a language you are more familiar with. (Also included in this workshop is the [Python](../workshop-function-code/python-twilio.py) and [Node.JS](../workshop-function-code/node-twilio.js) equivalent). The principals of this workshop are very much the same across the board.
 
 ![create action](../workshop-assets/ibm-cloud/create-action.png "Create Action")
 
 ## Step 3 - Set up the Action
 
-As it stands this Action is not public and this prevents Webhooks and other public HTTP actions from interacting with it. To change this you need to make it a `Web Action`. Select `Endpoints` from the side bar.
+As it stands this Action is not public and this prevents Webhooks and other public HTTP actions from interacting with it (as seen with annotation 1 below). To change this you need to make it a `Web Action`. Select `Endpoints` from the side bar.
 
 ![select endpoints](../workshop-assets/ibm-cloud/boilerplate-code.png "Select Endpoints")
 
-Select the checkbox `Enable as Web Action` and click `Save`. You will notice the `Web Action` icon change and you will be able to see the pub HTTP URL.
+The next step is to select the checkbox `Enable as Web Action` and click `Save`. You will notice the `Web Action` icon change and you will be able to see the public HTTP URL.
 
 ![enable web action](../workshop-assets/ibm-cloud/enable-web-action.png "Enable Web Action")
 
@@ -36,19 +44,21 @@ Now the `Action` is public and we can hit the endpoint from external sources, we
 
 For this, you will need to add the following:
 
-`recipientNumber` = The number you wish to send a text message too
+`recipientNumber` - The number you wish to send a text message too
 
-`authToken` = Your Twilio Account Auth Token (Found on your dashboard)
+`authToken` - Your Twilio Account Auth Token *(Found on your dashboard)*
 
-`accountSid` = Your Twilio Account SID (Found on your dashboard)
+`accountSid` - Your Twilio Account SID *(Found on your dashboard)*
 
-`twilioNumber` = Your number associated with your Twilio Account
+`twilioNumber` - Your number associated with your Twilio Account
 
 ![action parameters](../workshop-assets/ibm-cloud/action-params.png "Action Parameters")
 
 ## Step 4 - Create the function code
 
-Read the code below line by line to understand what is happening. If you are not using `Go`, I would still recommend reading this code to understand what is going on behind the scenes in the other language packages. Feel free to switch this up and use [Python](../workshop-function-code/python-twilio.py) or [Node.JS](../workshop-function-code/node-twilio.js) instead (they are much shorter!).
+Before going any further, carefully read the code below line by line to understand what is happening (use the comments to help).
+
+If you are not using `Go`, I would still recommend reading this code to understand what is going on behind the scenes in the other language packages - [Python](../workshop-function-code/python-twilio.py) / [Node.JS](../workshop-function-code/node-twilio.js).
 
 ```go
 package main
@@ -61,33 +71,37 @@ import (
 	"strings"
 )
 
-// Main is the function implementing the action
+/* Main is the function implementing the action
+** It is accepting "params" which is map of strings
+** The function then returns a map of strings */
 func Main(params map[string]interface{}) map[string]interface{} {
 
+	// extract the parameters from the params map
 	action := params["action"].(string)
 	twilioNumber := params["twilioNumber"].(string)
 	recipientNumber := params["recipientNumber"].(string)
 
-	// only invoke Twilio message service if the GitHub PR action = assigned
+	// only invoke Twilio message service if the GitHub Pull Request action = assigned
 	if action == "assigned" {
 
 		fmt.Println("pull request assigned")
 
-		// set account information from provided params
+		// set account information by extracting data from params map
 		accountSid := params["accountSid"].(string)
 		authToken := params["authToken"].(string)
 		urlStr := "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json"
 
-		// text message being sent to recipient
+		// build the text message being sent to the recipient
 		textMsg := "New pull request assignee"
 
-		// package the data values
+		// package up the data values
 		msgData := url.Values{}
 		msgData.Set("To", recipientNumber)
 		msgData.Set("From", twilioNumber)
 		msgData.Set("Body", textMsg)
 		msgDataReader := *strings.NewReader(msgData.Encode())
 
+		// call the request function with the data provided
 		msg := request(authToken, accountSid, urlStr, msgDataReader)
 
 		return msg
@@ -102,7 +116,7 @@ func Main(params map[string]interface{}) map[string]interface{} {
 }
 
 func request(authToken, accountSid, urlStr string, msgDataReader strings.Reader) map[string]interface{} {
-	// create HTTP client, req & set req headers
+	// create a HTTP client, request & set request headers
 	client := &http.Client{}
 	req, _ := http.NewRequest("POST", urlStr, &msgDataReader)
 	req.SetBasicAuth(accountSid, authToken)
@@ -132,19 +146,21 @@ func request(authToken, accountSid, urlStr string, msgDataReader strings.Reader)
 
 `action := params["action"].(string)`
 
-We haven't specified an `action` parameter for our function. The reason we haven't is because this will be within the payload of the `POST` request that hits this endpoint. It is still a parameter, just not one that we need to set.
+We haven't specified an `action` parameter for our function in the previous step. The reason we haven't manually specified this is because it will be within the payload of the `POST` request that hits this endpoint. It is still a parameter, just not one that we need to set.
 
 Let me explain.
 
-When the GitHub Webhook sends a `POST` request to this endpoint, it will carry with it a payload of information. This payload will tell us much more information about the changes being made on GitHub. 
+When the GitHub Webhook sends a `POST` request to this endpoint, it will carry with it a payload of information. This payload will tell us much more information about the event GitHub. 
 
 Visit [GitHub Webhook events](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#webhook-payload-object-common-properties) for more information about each event payload.
 
-For this workshop, I am using the [pull_request](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#pull_request) event. You can see here, the `key` is `action` and it can have many values. In the code snippet above, we are making decisions based on the value of `action`.
+This workshop is using the [pull_request](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#pull_request) event. You can see here, the `key` is `action` and it can have many values. In the code snippet above, we are making decisions based on the value of `action`. This determines whether or not an SMS is sent.
 
 ## Step 4 - Manually test the function
 
-First we will check the function fails correctly. The code to send a text message notification should only run if the value of `action` == `assigned`. All other cases should fail gracefully and just return a message to the console and return an object with the action that was supplied in the parameters.
+First we will check the function fails correctly.
+
+The code to send a text message notification should only run if the value of `action == assigned`. All other cases should fail gracefully. It will return a message to the console and return an object with the action that was supplied in the parameters.
 
 ![test action](../workshop-assets/ibm-cloud/test-action.png "Test Action")
 
@@ -152,7 +168,7 @@ You should see that the output is what we expected. A simple log to the console 
 
 ![fail case pass](../workshop-assets/ibm-cloud/fail-case-pass.png "Fail Case Pass")
 
-We can see it is now passively failing successfully. Lets see if we can make it pass correctly and send a text message.
+We can see it is now failing successfully. Lets see if we can make it pass correctly and send a text message.
 
 To do this, we need to change it parameters we are invoking the Action with. Change `test` to `assigned` and then invoke it again.
 
@@ -162,19 +178,21 @@ To do this, we need to change it parameters we are invoking the Action with. Cha
 
 ![text message](../workshop-assets/ibm-cloud/text-message.png "Text Message")
 
-The action works! Now what? We need to trigger it.
+The action works! Now what?
+
+This currently runs manually, so we need to create an automatic trigger.
 
 ## Step 5 - Trigger the Action
 
-Before we get started with this step, make sure you have you a GitHub repository you can test on. If you don't, don't panic. Just checkout this [repository tutorial]() which shows you how to create your own. (This only takes ~2 minutes to do).
+Before we get started with this step, make sure you have you a GitHub repository you can test on. If you don't, don't panic. Just checkout this [repository tutorial](../workshop-instructions/setup-github-repository.md) which shows you how to create your own. (This only takes ~2 minutes to do).
 
-A `Trigger` is something that will take an event from outside of IBM Cloud Functions and invoke all connected `Actions`.
+A `Trigger` will listen for an event to happen from inside or outside of IBM Cloud Functions and invoke any connected `Actions`.
 
-Head back to the `Functions` dashboard and select `Triggers` on the side panel and click on `Create`.
+First, head back to the `Functions` dashboard and select `Triggers` on the side panel and click on `Create`.
 
 ![trigger dashboard](../workshop-assets/ibm-cloud/trigger-dashboard.png "Trigger Dashboard")
 
-You will be faced with the same 5 options, much like you were earlier. Select `Trigger`.
+You will be faced with the same 5 options as earlier, except in this case, select `Trigger`.
 
 ![select trigger](../workshop-assets/ibm-cloud/select-trigger.png "Select Trigger")
 
@@ -183,7 +201,7 @@ This will lead you to a page with a few more options around what type of trigger
 ![select trigger type](../workshop-assets/ibm-cloud/select-trigger-type.png "Select Trigger Type")
 
 Setting up the trigger steps:
-1. Click on `Get Access Token` - Clicking on this button will promp you to authenticate with GitHub if this is your first time authenticating or it will automatically get the an Auth Token. Either way, this just gived GitHub permission to interact with the `Trigger`.
+1. Click on `Get Access Token` - Clicking on this button will promp you to authenticate with GitHub if this is your first time authenticating or it will automatically get an Auth Token if it not your first time. Either way, this just gives GitHub permission to interact with the `Trigger`.
 2. `Trigger Name` is how it will be referenced
 3. `Username` - This is your GitHub Username and _should_ populate automatically.
 4. `Repository` - This will be the repository with the Webhook attached to it and the repository that you wish to interact with the trigger. Select one from the dropdown list (preferably the one you created to test this workshop on).
@@ -202,7 +220,7 @@ Since we have already made an `Action`, navigate to the `Select Existing` tab an
 
 ![attach action](../workshop-assets/ibm-cloud/attach-action.png "Attach Action")
 
-You can see the Webhook attached to the repository buy looking in the `Settings` of the repository on GitHub.
+If you head over to the GitHub repository connected to the trigger, you should see the Webhook attached to the repository buy looking in `Settings -> Webhooks` of the repository on GitHub.
 
 ![github webhook](../workshop-assets/ibm-cloud/github-webhook.png "GitHub Webhook")
 
@@ -212,7 +230,7 @@ Head to the testing repository you created and edit the `README.md`
 
 ![edit readme](../workshop-assets/github/edit-readme.png "Edit README.md")
 
-Make a change to the code and then make sure you check the button `Create a new branch for this commit and start a pull request`
+:rotating_light: :rotating_light: Make a change to the code and then make sure you check the button `Create a new branch for this commit and start a pull request` :rotating_light: :rotating_light:
 
 ![new commit](../workshop-assets/github/new-commit.png "New Commit")
 
@@ -235,6 +253,9 @@ and
 ![activations dashboard](../workshop-assets/ibm-cloud/activations-dashboard.png "Activations Dashboard")
 
 
+Wahoo! You have finished this IBM Cloud Functions workshop.
+
+:zap: I challenge you to extend this workshop and show us what you create via Twitter at [@CodeMeetup](https://twitter.com/CodeMeetup). :zap:
 
 
 
