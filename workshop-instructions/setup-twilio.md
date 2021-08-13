@@ -18,7 +18,7 @@ Select your country and tick the box `SMS` as this number only needs to send a t
 
 Click `Search` and purchase a number.
 
-> :alarm: This will use your trial credit so do not panic :alarm:
+> :rotating_light: This will use your trial credit so do not panic :rotating_light:
 
 ![twilio buy a number](../workshop-assets/twilio/twilio-buy-number.png "Buy a Twilio Number")
 
