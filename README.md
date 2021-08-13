@@ -12,8 +12,9 @@ This workshop will use:
 
 ## Prerequisites
 
-1. An IBM Cloud account
-2. A GitHub account
+1. IBM Cloud account
+2. GitHub account
+3. Twilio account
 
 ---
 
