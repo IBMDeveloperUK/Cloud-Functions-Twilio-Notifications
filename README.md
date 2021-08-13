@@ -1,4 +1,4 @@
-# cloud-functions-twilio-notifications
+# Use IBM Cloud Functions to send SMS messages via the Twilio API
 Learn how to create serverless functions and enable them to be triggered based on external events.
 
 ![workshop diagram](./workshop-diagram.png)
